@@ -10,14 +10,30 @@ class App {
   constructor($target) {
     this.$target = $target;
 
+    this.Loading = new Loading({
+      $target,
+    });
+
     this.darkModeToggle = new DarkModeToggle({
       $target,
     });
-    
+
     this.searchInput = new SearchInput({
       $target,
       onSearch: (keyword) => {
-        api.fetchCats(keyword).then(({ data }) => this.setState(data));
+        this.Loading.show();
+        api.fetchCats(keyword).then(({ data }) => {
+          this.setState(data);
+
+          this.Loading.hide();
+        });
+      },
+      onRandomSearch: () => {
+        this.Loading.show();
+        api.fetchRandomCats().then(({ data }) => {
+          this.setState(data);
+          this.Loading.hide();
+        });
       },
     });
 
@@ -42,7 +58,6 @@ class App {
   }
 
   setState(nextData) {
-    console.log(this);
     this.data = nextData;
     this.searchResult.setState(nextData);
   }
