@@ -61,4 +61,15 @@ class App {
     this.data = nextData;
     this.searchResult.setState(nextData);
   }
+
+  saveResult(result) {
+    localStorage.setItem("lastResult", JSON.stringify(result));
+  }
+
+  init() {
+    const lastResult = localStorage.getItem("lastResult")
+      ? JSON.parse(localStorage.getItem("lastResult"))
+      : [];
+    this.setState(lastResult);
+  }
 }
